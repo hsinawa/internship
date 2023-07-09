@@ -1,0 +1,38 @@
+version: '3'
+services:
+  mongo:
+    image: 'mongo'
+    environment:
+      - MongoURL=mongodb+srv://awanishmishra3:awanishmishra3@cluster0.wxurcw4.mongodb.net/awanish
+  
+  nginx:
+    depends_on:
+      - api
+      - client
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - '3050:80'
+  api:
+    build:
+      dockerfile: Dockerfile.dev
+      context: .
+    volumes:
+      - /app/node_modules
+      - .:/app
+  
+  client:
+    environment:
+      - WDS_SOCKET_PORT=0
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+  
+  
+      
+    
